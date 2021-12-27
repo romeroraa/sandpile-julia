@@ -36,9 +36,10 @@ end
 
 
 
+
 fᵪ = 4
 z = zeros(Int64, 50, 50)
-lifetimes = zeros(Int64, 1000000)
+lifetimes = zeros(Int64, 100000)
 for i in 1:length(lifetimes)
         add_grain!(z)
         lifetime = 0
@@ -49,5 +50,11 @@ for i in 1:length(lifetimes)
 end
 
 using Plots
+unique_lt = unique(lifetimes)
+counts = [count(==(element), lifetimes) for element in unique_lt]
+
+scatter(unique_lt[2:end], counts[2:end] ./ sum(counts[2:end]), xaxis=:log, yaxis=:log)
+savefig("./results/fig5.png")
+
 heatmap(1:50, 1:50, z)
-savefig("test.png")
+savefig("./results/sandpile..png")
