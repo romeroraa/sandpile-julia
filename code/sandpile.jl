@@ -10,6 +10,9 @@
 # s = run_sandpile!(z, 100_000, 4);
 #
 #
+module Sandpile
+
+export sandpile_init, run_sandpile!, avalanche!, add_grain!, is_unstable
 
 function sandpile_init(x::Int64, y::Int64, setup::String="random")
     """
@@ -108,13 +111,26 @@ function run_sandpile!(z::Array{Int64,2}, N::Int64, fᵪ=4)
             (Vector{Int64}): Lifetimes of avalanches for each grain added.
     """
     s_list = zeros(Int64, N)
-    for i in 1:N
+    #    for i in 1:N
+    #        add_grain!(z)
+    #        s = 0
+    #        while is_unstable(z, fᵪ)
+    #            s += avalanche!(z)
+    #        end
+    #        s_list[i] = s
+    i = 1
+    while i <= N
         add_grain!(z)
         s = 0
         while is_unstable(z, fᵪ)
             s += avalanche!(z)
         end
-        s_list[i] = s
+        if s > 0
+            s_list[i] = s
+            i += 1
+        end
     end
     return s_list
+end
+
 end
