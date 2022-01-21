@@ -99,38 +99,46 @@ function avalanche!(z::Array{Int64,2}, fᵪ=4)
     return s
 end
 
-function run_sandpile!(z::Array{Int64,2}, N::Int64, fᵪ=4)
+function run_sandpile!(z::Array{Int64,2}, N::Int64; N_crit::Bool=false, fᵪ::Int64=4)
     """
             run_sandpile(z, N, fᵪ)
     Run a sandpile model on an input grid `z` by adding `N` grains.
     Arguments:
             z (Array{Int64, 2}): 2D sandpile grid.
             N (Int64): Number of grains to add
+            N_crit (boolean): Do you want to to all added `N` grains to result in collapses?
+                              If set to `false`, `N` grains will be added to system but
+                              returned sizes will only be those that result in avalanches.
+                              Warning:  longer runtimes if set to `true`.
             fₓ (Int64): Critical value for sandpile model (Must be > 1)
     Returns
-            (Vector{Int64}): Lifetimes of avalanches for each grain added.
+            (Vector{Int64}): Sizes of avalanches for each grain added.
     """
     s_list = zeros(Int64, N)
-    #    for i in 1:N
-    #        add_grain!(z)
-    #        s = 0
-    #        while is_unstable(z, fᵪ)
-    #            s += avalanche!(z)
-    #        end
-    #        s_list[i] = s
-    i = 1
-    while i <= N
-        add_grain!(z)
-        s = 0
-        while is_unstable(z, fᵪ)
-            s += avalanche!(z)
-        end
-        if s > 0
+    if N_crit
+            i = 1
+            while i <= N
+                add_grain!(z)
+                s = 0
+                while is_unstable(z, fᵪ)
+                    s += avalanche!(z)
+                end
+                if s > 0
+                    s_list[i] = s
+                    i += 1
+                end
+            end
+    else
+        for i in 1:N
+            add_grain!(z)
+            s = 0
+            while is_unstable(z, fᵪ)
+                s += avalanche!(z)
+            end
             s_list[i] = s
-            i += 1
         end
     end
-    return s_list
+    return s_list[s_list .> 0]
 end
 
 end
