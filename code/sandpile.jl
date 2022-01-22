@@ -24,33 +24,33 @@ function sandpile_init(x::Int64, y::Int64, setup::String="random")
             y (Int64): length of grid along y
             setup (String): Type of inital setup for grid. Can either be `zero` or `random`.
     Returns:
-            z (Matrix{Int64}): sandpile grid z with dimensions (x,y).
+            z (Matrix{UInt8}): sandpile grid z with dimensions (x,y).
     """
     if setup == "random"
         return rand(0:3, x, y)
     elseif setup == "zero"
-        return zeros(Int64, x, y)
+        return zeros(UInt8, x, y)
     else
         error("`setup` must have value of `random` or `zero`")
     end
 end
 
-function add_grain!(z::Array{Int64,2})
+function add_grain!(z::Array{UInt8,2})
     """
             add_grain!(z)
     Adds a grain to a random location on the  2d array grid for the Abelian sandpile model, `z`.
     Arguments:
-            z (Array{Int64, 2}): 2D sandpile grid.
+            z (Array{UInt8, 2}): 2D sandpile grid.
     """
     return z[rand(1:size(z)[1]), rand(1:size(z)[2])] += 1
 end
 
-function is_unstable(z::Array{Int64,2}, fᵪ::Int64=4)
+function is_unstable(z::Array{UInt8,2}, fᵪ::Int64=4)
     """
             is_unstable(z, fᵪ)
     Checks whether or not any location on the grid is unstable (has value above critical value).
     Arguments:
-            z (Array{Int64, 2}): 2D sandpile grid.
+            z (Array{UInt8, 2}): 2D sandpile grid.
             fₓ (Int64): Critical value for sandpile model (Must be > 1)
     Returns:
             (bool): Whether grid is stable or unstable.
@@ -65,7 +65,7 @@ function is_unstable(z::Array{Int64,2}, fᵪ::Int64=4)
     end
 end
 
-function avalanche!(z::Array{Int64,2}, fᵪ=4)
+function avalanche!(z::Array{UInt8,2}, fᵪ=4)
     """
             avalanche(z, fᵪ)
     Update grid to follow rules on locations that are unstable. 
@@ -73,12 +73,12 @@ function avalanche!(z::Array{Int64,2}, fᵪ=4)
     Returns how many avalanches (or slides s) occur for input state after collapsing all 
     unstable locations.
     Arguments:
-            z (Array{Int64, 2}): 2D sandpile grid.
-            fₓ (Int64): Critical value for sandpile model (Must be > 1)
+            z (Array{UInt8, 2}): 2D sandpile grid.
+            fₓ (UInt8): Critical value for sandpile model (Must be > 1)
     Returns:
-            (Int64): Number of unstable locations collapsed.
+            (UInt8): Number of unstable locations collapsed.
     """
-    s::Int64 = 0
+    s::UInt8 = 0
     unstable_locs = findall(>=(fᵪ), z)
     for crit_loc in unstable_locs
         z[crit_loc] -= 4
@@ -99,12 +99,12 @@ function avalanche!(z::Array{Int64,2}, fᵪ=4)
     return s
 end
 
-function run_sandpile!(z::Array{Int64,2}, N::Int64; N_crit::Bool=false, fᵪ::Int64=4)
+function run_sandpile!(z::Array{UInt8,2}, N::Int64; N_crit::Bool=false, fᵪ::Int64=4)
     """
             run_sandpile(z, N, fᵪ)
     Run a sandpile model on an input grid `z` by adding `N` grains.
     Arguments:
-            z (Array{Int64, 2}): 2D sandpile grid.
+            z (Array{UInt8, 2}): 2D sandpile grid.
             N (Int64): Number of grains to add
             N_crit (boolean): Do you want to to all added `N` grains to result in collapses?
                               If set to `false`, `N` grains will be added to system but
@@ -112,7 +112,7 @@ function run_sandpile!(z::Array{Int64,2}, N::Int64; N_crit::Bool=false, fᵪ::In
                               Warning:  longer runtimes if set to `true`.
             fₓ (Int64): Critical value for sandpile model (Must be > 1)
     Returns
-            (Vector{Int64}): Sizes of avalanches for each grain added.
+            (Vector{UInt8}): Sizes of avalanches for each grain added.
     """
     s_list = zeros(Int64, N)
     if N_crit

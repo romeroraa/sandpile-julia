@@ -10,7 +10,7 @@ fᵪ = 4; # Critical value for sandpile model
 for samples in [1, 10, 200]
     for init in ["zero", "random"]
 
-        s = [run_sandpile!(sandpile_init(x, y, "zero"), N) for i in 1:samples]
+            s = [run_sandpile!(sandpile_init(x, y, "zero"), N) for i in 1:samples]
 
         # Get counts of each slide size s
         unique_s = sort(unique(reduce(vcat, s)))
