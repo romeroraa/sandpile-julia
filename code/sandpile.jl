@@ -7,7 +7,7 @@
 # x = 50
 # y = 50
 # z = sandpile_init(x, y, "zero");
-# s = run_sandpile!(z, 100_000, 4);
+# s = run_sandpile!(z, 100_000);
 #
 #
 module Sandpile
