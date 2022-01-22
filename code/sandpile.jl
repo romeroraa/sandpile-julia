@@ -27,7 +27,7 @@ function sandpile_init(x::Int64, y::Int64, setup::String="random")
             z (Matrix{UInt8}): sandpile grid z with dimensions (x,y).
     """
     if setup == "random"
-        return rand(0:3, x, y)
+        return convert(Array{UInt8}, rand(0:3, x, y))
     elseif setup == "zero"
         return zeros(UInt8, x, y)
     else
